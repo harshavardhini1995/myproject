@@ -3,15 +3,19 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-//const bodyParser = require("body-parser");
+var bodyParser = require("body-parser");
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var expressValidator = require('express-validator')
 var app = express();
 
 
 app.set('view engine', 'ejs');
 app.set('views', 'myapp/views');
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false}));
+app.use(expressValidator());
 //app.use(require('./routes/index'));
 //app.use(require('./routes/users'));
 //app.use(require('./routes/index'));

@@ -21,11 +21,11 @@ router.get('/', function (req, res) {
     res.render('index');
 });
 /* GET home page. */
-router.get('/submitlog', function (req, res) {
-    var ln = req.query.LfirstName;
-    var password = req.query.Lpassword;
+router.post('/submitlog', function (req, res) {
+    var ln = req.body.LfirstName;
+    var password = req.body.Lpassword;
     //let sql = 'SELECT Name,password FROM regt WHERE Name = ?';
-    db.query('SELECT * FROM regt WHERE Name = ?',[ln], function (error, results, fields)
+    db.query('SELECT * FROM regt WHERE email = AND Name = ?',[ln], function (error, results, fields)
     {
            if (error)
              {
@@ -60,5 +60,6 @@ router.get('/submitlog', function (req, res) {
                     }
       }
   });
+
 });//app.post
 module.exports = router;

@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var app = express();
 const mysql = require('mysql');
+
+var popup = require('alert-node');
 //const bodyParser = require("body-parser");
 const db = mysql.createConnection({
    host  : 'localhost',
@@ -47,26 +49,38 @@ router.get('/createtb', (req,res) => {
 });
 
 router.post('/submitreg', function (req, res) {
-    console.log("Inside post submitreg " +req.body);
-    var n = req.body.firstName;
-    var ph = req.body.phno;
-    var pass = req.body.password;
-    var gen = req.body.gender;
-    var age = req.body.age;
-    var ad = req.body.address;
-    var email = req.body.email;
-    console.log(n +  " :fname");
-    console.log(ph +  " :ph");
-    console.log(pass +  " :pass");
-    console.log(gen +  " :gen");
-    console.log(ad +  " :ad");
-    console.log(email +  " :email");
-    let post = {Name: n, phone: ph, password: pass, gender: gen, age: age, address: ad, email: email};
-    let sql = 'INSERT INTO regt SET ?';
-   let query = db.query(sql, post, (err, result) => {
-     if(err) throw err;
-     //console.log(result);
-     res.send('Passed into table');
-   });
+
+
+      var n = req.body.firstName;
+      var ph = req.body.phno;
+      var pass = req.body.password;
+      var gen = req.body.gender;
+      var age = req.body.age;
+      var ad = req.body.address;
+      var email = req.body.email;
+      console.log("Inside post submitreg " +req);
+      req.check(email,'Invalid eamil ID').isEmail().withMessage( "Invalid email ID" );
+      req.check(n,'Invalid Name').isLength({min: 30}).withMessage( "Invalid Name" );
+      req.check(ph,'Invalid phone number').isMobilePhone().withMessage( "Invalid phone number" );
+      req.check(age,'Age cannot be greater than 18').isInt({gt: 18, lt: 31}).withMessage( "Age cannot be greater than 30" );
+      var errors = req.validationErrors();
+      if(errors) {
+        throw errors;
+        console.log("errors in validation"+errors);
+      }
+      console.log(n +  " :fname");
+      console.log(ph +  " :ph");
+      console.log(pass +  " :pass");
+      console.log(gen +  " :gen");
+      console.log(ad +  " :ad");
+      console.log(email +  " :email");
+      let post = {Name: n, phone: ph, password: pass, gender: gen, age: age, address: ad, email: email};
+      let sql = 'INSERT INTO regt SET ?';
+     let query = db.query(sql, post, (err, result) => {
+       if(err) throw err;
+       //console.log(result);
+       res.send('Passed into table');
+     });
+
  });
 module.exports = router;
